@@ -20,6 +20,7 @@ object Exercise01 {
 
     /* Use maps */
     val groceries = Map("eggs" -> "$1.75", "bread" -> "$2.00", "milk" -> "$3.60")
+    println(groceries)
     println(groceries.keys)
     println(groceries.values)
     println(groceries("milk"))
