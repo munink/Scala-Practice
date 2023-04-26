@@ -1,0 +1,53 @@
+public class InterestCalculator {
+	public double calculateInterest(double principle, double rateOfInterest, int durationInMonths, AccountInterface accountType) {
+	
+		
+		retun accountType.doCalculation(double principle, double rateOfInterest, int durationInMonths);
+	
+		
+	}
+}
+
+
+Add support for 'checking account' to the code below
+
+public class RefactoredInterestCalculator extends InterestCalculator {
+	
+	@Override
+	public double calculateInterest(double principle, double rateOfInterest, int durationInMonths, String accountType) {
+	
+		if (accountType.equalsIgnoreCase("Checking") {
+			// Checking account interest calculation logic
+		} else {
+			return super.calculateInterest(principle, rateOfInterest, durationInMonths, accountType);
+		}
+	}
+}
+
+
+public interface AccountInterface {
+	
+	public abstract double doCalculation();
+}
+
+
+public class SavingAccount implements AccountInterface {
+	
+	public double doCalculation() {
+		return ...;
+	}
+}
+
+public class CurrentAccount implements AccountInterface {
+	
+	public double doCalculation() {
+		return ...;
+	}
+}
+
+public interface AccountInterface {
+	
+	public double doCalculation() {
+		return ...;
+	}
+}

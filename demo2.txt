@@ -1,0 +1,9 @@
+This is a demo!
+Writing file content!
+creating a class..
+class Concatenate{
+  def strcat(s1:String)(s2:String)=(s3:String)=>s1+s2+s3
+}
+var c=new Concatenate()
+c.strcat("Hello")("World")("How are you?")
+res7: String = HelloWorldHow are you?

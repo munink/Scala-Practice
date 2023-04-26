@@ -1,0 +1,780 @@
+Transformation Example (Created new RDD):
+=========================================
+1. Parallelize already existing collection in a driver program:
+===============================================================
+val myFirstRDD = sc.parallelize(List("spark", "scala", "hadoop", "test"))
+myFirstRDD.collect()
+
+val newRDD = myFirstRDD.filter(x => x.contains("spark"))
+newRDD.collect
+
+val numbers = sc.parallelize(List(1,2,3,4,5,6,7,8,9,10))
+val evens = numbers.filter(_%2 == 0).collect
+
+
+val flatMap = sc.parallelize(List(1,2,3)).flatMap(x => List(x, x, x))
+flatMap.collect
+
+val par1 = sc.parallelize(1 to 9)
+val par2 = sc.parallelize(5 to 15)
+par1.intersection(par2).collect
+
+2. Refer a dataset in an external storage system:
+=================================================
+val textRDD = sc.textFile("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/text_data/Behavioral_Design_Patterns.txt")
+val newRDD = textRDD.filter(word => word.contains("doCalculation")).collect()
+//textRDD.collect()
+
+
+3. Create an RDD from already existing RDD (map and flatMap):
+=============================================================
+val x = sc.parallelize(List("spark", "rdd", "example", "sample", "example"))
+val y = x.map(x => (x, 1)).collect
+
+sc.parallelize(List(1,2,3)).flatMap(x => List(x,x,x)).collect()
+
+
+
+Actions (Not created new RDD):
+==============================
+val value = sc.parallelize(1 to 10)
+value.reduce(_+_)
+
+val names = sc.parallelize(List("abe", "abby", "apple", "abu"))
+names.reduce((t1, t2) => t1 + t2)
+
+val names = sc.parallelize(List("abe", "abby", "apple", "abu"))
+names.first
+
+val nums = sc.parallelize(List(1,5,3,9,4,0,2))
+nums.take(4)
+
+val nums = sc.parallelize(List(1,2,3,4,5,6,7,8,9), 3)
+nums.foreachPartition(num => println(num.reduce(_ + _)))
+
+
+Data Frame (Named columns and rows):
+====================================
+val product = List((1, "mobile", 50000), (2, "shoes", 4500), (3, "TV", 70000))
+val productDF = product.toDF("pid", "product", "value")
+productDF.show()
+
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student-1.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/student_2.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2-2.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-1.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-4.json")
+val df1 = spark.read.format("json").load("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_formatted.json")
+dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/text_data/Behavioral_Design_Patterns.txt
+
+val df = spark.read.json("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-6.json")
+df.show()
+import spark.implicits._
+df.printSchema()
+
+val mdf = spark.read.option("multiline", "true").json("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2-2.json")
+mdf.show(true)
+
+val mdf = spark.read.option("multiline", "true").json("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student.json")
+//mdf.show(true)
+mdf.select("name", "color", "info").show()
+mdf.printSchema()
+
+val df = spark.read.json("dbfs:/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-6.json")
+df.select("name").show()
+df.filter($"age" >= 18).show()
+df.groupBy("age").count().show()
+
+df.createOrReplaceTempView("student")
+val sqlDF1 = spark.sql("select * from student")
+sqlDF1.show()
+
+val sqlDF2 = spark.sql("select * from student where age = 18")
+sqlDF2.show()
+
+
+Delete DBFS File:
+=================
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/SampleCSVFile_10600kb-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/student_2.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/SampleCSVFile_1109kb-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/SampleCSVFile_119kb-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/SampleCSVFile_11kb-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/SampleCSVFile_53000kb-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/SampleCSVFile_5300kb-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/Sample_Spreadsheet_5000_rows-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/username_password_recovery_code-1.csv")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/student.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/student.json/student.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student-1.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2-1.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2-2.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2-3.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_2.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-2.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-3.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-4.json")
+dbutils.fs.rm("/FileStore/shared_uploads/kmunin987@gmail.com/json_data/student_name_age-5.json")
+
+
+Mllib Practice(Regression Algorithm):
+=====================================
+import org.apache.spark.ml.evaluation.RegressionEvaluator
+import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit}
+import org.apache.log4j._
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.mllib.linalg.Vectors
+
+Logger.getLogger("org").setLevel(Level.ERROR)
+
+val csvValues = spark.read.option("header", "true").option("inferSchema", "true").format("CSV").load("/FileStore/shared_uploads/kmunin987@gmail.com/cvs_data/username_password_recovery_code.csv")
+//csvValues.collect()
+csvValues.printSchema()
+
+def myFunc(value: Boolean) = if(value) 5000 else "False"
+//myFunc: (value: Boolean)Any
+
+def myFunc(value: Boolean): Int = if(value) 5000 else 0
+
+Immutable variable:
+===================
+val d = 4
+d = 6
+//command-1105352248136795:2: error: reassignment to val
+//d = 6
+//  ^
+
+
+Function:
+=========
+def multiplyInt(d: Int, f: Int): Int = {var result: Int = 0; result = d * f; return result}
+multiplyInt(4, 6)
+
+
+Annonymous Funtion:
+===================
+val myMultiply = (d: Int, f: Int) => d * f
+myMultiply(7, 8)
+
+
+Collection:
+===========
+val d = List(5,6,7,8)
+
+val f = Set(3,6,9,12)
+//f: scala.collection.immutable.Set[Int] = Set(3, 6, 9, 12)
+f(3)
+f(16)
+
+val g = Map("a" -> 1, "b" -> 2, "c" -> 3)
+//g: scala.collection.immutable.Map[String,Int] = Map(a -> 1, b -> 2, c -> 3)
+g("c")
+
+val t = ("com.basic.mix.Car", 5) // Tuple
+val k: Option[String] = Some("Y") // Option
+
+
+Infix Notation(Takes 2 operands, uses symbols as an operator):
+==============================================================
+3 + 5
+"munin " * 3
+"munin " * 2 + "munin"
+
+val s = "Skillsoft"
+s.indexOf('f')
+s.indexOf("f")
+s indexOf 'f'
+
+4 + 6
+4. + (6)
+6 % 4
+6 > 4
+8 < 7
+
+val t = true
+val f = false
+val test = t || f
+!f
+1 | 2
+
+val num = 3 + 5L
+//num: Long = 8
+
+5.55d + 2.2f
+//res4: Double = 7.750000047683716
+
+val s = "Some text"
+
+def test(a: Int, b: Int) = a == b
+test(100, 100)
+
+def newTest(a: Any, b: Any) = a == b
+newTest(100, 100)
+newTest("new", "new")
+
+
+Unit Function:
+==============
+def sayHello() = println("Hello")
+sayHello
+
+
+Conditionals:
+=============
+val paramList = Array("first", "second", "third")
+val item = if (!paramList.isEmpty) paramList(0) else "default value"
+
+
+Match Expressions:
+==================
+val paramList = Array("first", "second", "third")
+val item = if (!paramList.isEmpty) paramList(0) else "default value"
+val choice = item match {
+  case "first" => "first selected"
+  case "second" => "second selected"
+  case "third" => "third selected"
+  case _ => "something case selected"
+}
+
+println(choice)
+
+
+Constructors(Primary & Auxilary Constructors):
+==============================================
+Primary Constructors:
+=====================
+class Ball(d: Double, t: String) {
+  println("New " + t + " ball created with diameter " + d + " cm")
+}
+new Ball(6.5, "tennis")
+
+Auxilary Constructors:
+======================
+class Ball(d: Double, t: String) {
+  require(t != "")
+  def this(d: Double) = this(d, "default")
+  println("New " + t + " ball created with diameter " + d + " cm")
+}
+new Ball(12)
+
+
+Fields in Classes:
+==================
+class SomeClass {
+  var q = 0
+}
+val insA = new SomeClass
+val insB = new SomeClass
+//insA.q
+//insB.q
+//insA.q = 5
+insB.q
+
+class AnotherClass {
+  private var q = 0
+}
+val insC = new AnotherClass
+insC.q
+
+
+Getters:
+========
+class SomeClass {
+  private[this] var q = 0
+  def quantity: Int = q
+  def quantity_= (b: Int) {q = b}
+}
+val s = new SomeClass
+s.quantity
+
+//Overriding getters:
+class Ball {
+  private[this] var d:Double = _
+  def diam = d / 2.54
+  def diam_= (m: Double) {d = m}
+}
+val b = new Ball
+b.diam = 24
+
+
+Setters:
+========
+class SomeCLass {
+  private[this] var q = 0
+  def quantity: Int = q
+  def quantity_= (b: Int) {q = b}
+}
+val s = new SomeClass
+s.quantity = 5
+
+class Ball {
+  private[this] var d: Double = _
+  def diam = d
+  def diam_= (m: Double) {
+    require(3.8 <= m && m < 24.26)
+    d = m
+  }
+}
+val b = new Ball
+b.diam = 9.83
+d.diam = 50
+
+Singleton Object:
+=================
+import java.io._
+
+class com.basic.mix.Car (milesPerGallon: Int, gallonsPerTank: Int) {
+  var mpg: Int = milesPerGallon
+  var gpt: Int = gallonsPerTank
+  var mpt: Int = 0
+  
+  def milesPerTank() {
+    mpt = mpg * gpt
+    println("Number of Miles per tank: " + mpt)
+  }
+}
+
+object com.basic.mix.Volvo {
+  def main(args: Array[String]) {
+    val sedan = new com.basic.mix.Car(40, 18)
+    sedan.milesPerTank()
+  }
+}
+
+
+Companion Objects(Class and Object names are same):
+===================================================
+import java.io._
+
+class com.basic.mix.Car (milesPerGallon: Int, gallonsPerTank: Int) {
+  var mpg: Int = milesPerGallon
+  var gpt: Int = gallonsPerTank
+  var mpt: Int = 0
+  
+  def milesPerTank() {
+    mpt = mpg * gpt
+    println("Number of Miles per tank: " + mpt)
+  }
+}
+
+object com.basic.mix.Car {
+  def main(args: Array[String]) {
+    val SUV = new com.basic.mix.Car(25, 20)
+    SUV.milesPerTank()
+  }
+}
+
+
+Subtype Inheritance:
+====================
+import scala.math._
+
+class com.basic.mix.Shape3D(val height: Double) {
+  var h: Double = height
+  var result: Double = _
+  def volume() {
+    result = h * h * h
+    println("Volume of shape (cube): " + result + " cm3")
+  }
+}
+
+class com.basic.mix.Cylinder(override val height: Double, val radius: Double) extends com.basic.mix.Shape3D(height) {
+  var r: Double = radius
+  override def volume() {
+    result = Pi * r * r * h
+	println("Volume of cylinder: " + result + " cm3")
+  }
+}
+
+val shape = new com.basic.mix.Cylinder(10, 4)
+shape.volume()
+
+Traits:
+=======
+trait Shape {
+  def area() {
+    println("Area of shape depends on the type of shape!")
+  }
+}
+class Circle extends Shape {
+  override def toString = "circle"
+}
+val myCircle = new Circle
+myCircle.area()
+
+val c: Shape = myCircle
+c.area()
+
+class Cuboid {
+}
+class Cube extends Cuboid with Shape {
+  override def toString = "cube"
+  override def area() {
+    println("Surface area of cube = 6 * pow(w,2)")
+  }
+}
+val myCube = new Cube
+myCube.area()
+
+
+trait Prism {
+  def volume() {
+    println("Volume of a prism is lenght * width * height")
+  }
+}
+class SpecialCube extends Cuboid with Shape with Prism {
+  override def toString = "special cube"
+}
+val mySC = new SpecialCube
+mySC.volume()
+
+
+Exercise with class, subclass and companion object:
+===================================================
+1. Create a class that has one parameter, two fields and an empty-paren method.
+2. Create a subclass and override a field and a method from the superclass.
+3. Create a compain object that will act as the entry point to the Scala application.
+  a) Declare the companion object.
+  b) Define a main method in the body of the companion object.
+
+import scala.math._
+
+class com.basic.mix.Shape3D(val height: Double) {
+  var h: Double = height
+  var result: Double = _
+
+  def volume() {
+    result = h * h * h
+    println("Volume of the shape (cube): " + result + " cm3")
+  }
+}
+
+class com.basic.mix.Cylinder(override val height: Double, val radius: Double) extends com.basic.mix.Shape3D(height) {
+  var r: Double = radius
+
+  override def volume() {
+    result = Pi * r * r * h
+    println("Volume of cylinder: " + result + " cm3")
+  }
+}
+
+object com.basic.mix.Shape3D {
+  def main(args: Array[String]) {
+    val shape = new com.basic.mix.Cylinder(20, 10)
+    shape.volume()
+  }
+}
+
+
+
+Pattern Matching:
+=================
+def fn(a: Any): String = a match {
+  case _: Char => "Char"
+  case _: Int | _: Long | _: Short => "Integer Value"
+  case _: Double | _: Float => "Floating point number"
+  case _: String => "String"
+  case _: => "N/A"
+}
+
+println(fn(1))			// Int
+println(fn(1L))			// Long
+println(fn(1: Short))	// Short
+println(fn('a'))		// Char
+println(fn(true))		// N/A
+println(fn(1.0d))		// double
+println(fn(1.0f))		// float
+
+
+Pattern Matching & Java Interoperability:
+=========================================
+Pattern Matching and Case Classes
+
+
+
+"batmanstein".drop(3).capitalize.take(3)
+"batmanstein".drop(3).take(3).capitalize
+
+val x:Option[String]=Some("hi")
+println(x.get)
+
+class Complex(real:Double,imaginary:Double){
+def re()=real
+def im()=imaginary
+}
+
+case class People(name:String,age:Int)
+val people1=People("Ayushi",22)
+val people2=People("Ayushi",22)
+people1==people2
+
+
+val leaders=collection.mutable.Buffer("Reykon")
+leaders+="obama"
+println(leaders)
+
+
+List(1,2,3)flatMap(x=>List(x,4))
+
+val stuff=collection.mutable.Buffer("blue")
+stuff+=44
+println(stuff)
+
+
+"abcde" ensuring (_.length>3)
+
+
+class Complex(real:Double,imaginary:Double){
+  def re()=real
+  def im()=imaginary
+}
+
+
+var y:Option[String]=None
+y.get
+
+
+object Flash{
+  def superpower="speed"
+}
+
+
+object Dog{
+  def bark="woof"
+}
+
+
+val numbers=List(11,22,33)
+var total=0
+for(i<-numbers){
+  total+=i
+}
+println(total)
+
+
+val odds=List(3,5,7)
+var result=1
+odds.foreach((num:Int)=>result*=num)
+println(result)
+
+
+val evens=List(2,4,8)
+println{
+  evens.foldLeft(0) { (memo: Int, y: Int) =>
+  memo+y
+  }
+}
+
+
+def quadruple(x:Int):Int=x*4
+val quadrupleCopy=quadruple _
+println(quadrupleCopy(-1))
+
+
+var greeting:Option[String]= Some("hello")
+greeting= Some(7)
+println(greeting.get)
+
+
+val cool=Map("a"->"aaa", "b"->"bbb", "a"->"ccc")
+println(cool("a"))
+
+
+println(40.getClass)
+
+println("frankl"||true))
+
+
+var countries=List("brazil", "argentina", "colombia")
+println{
+  countries.reduceLeft[String]{(c1: String, c2: String)=>
+  s"$c1, $c2"
+  }
+}
+
+
+var rrr= List("ant", "beer", "battered", "cool", "burger")
+rrr.filter {(w: String) =>
+  w.take(1) == "b"
+  }.reduceLeft{(a: String, b: String) =>
+  s"$a $b"
+}
+
+
+case class Dog(breed: String, age: Int)
+val fido= new Dog("lab", 4)
+println(fido.toString)
+
+
+object DoubleUtils{
+  implicit class Funny(val num: Double, joke: String){
+    def knockKnock={
+      s"${num.toString} is here"
+    }
+  }
+}
+import DoubleUtils._
+println(3.14.knockKnock)
+
+
+object DoubleUtils{
+  implicit class Funny(val num: Double){
+    def knockKnock={
+      s"${num.toString} is here"
+    }
+  }
+}
+import DoubleUtils._
+println(3.14.knockKnock)
+
+
+object Whatever{
+  def speak(something: String)(implicit nice: String)={
+    println(s"$something $nice")
+  }
+}
+
+implicit val nice= "the walrus"
+println{
+  Whatever.speak("I am")
+}
+println{
+  Whatever.speak("I like")("catfood")
+}
+
+
+trait Diva{
+  var attitude= "subjective"
+}
+var arianaGrand= new Diva
+println(arianaGrande.attitude)
+
+
+val s= "(888) 333-4444"
+println("1-> " + s.replace("[0-9]","x"))
+println("2-> " + s.replaceAll("x", "[0-9]"))
+println("3-> " + s.replace("x","[0-9]"))
+println("4-> " + s.replaceAll("[0-9]","x"))
+
+
+val r = "Milton Friedman died at 94 years of age."
+println("1-> " + "[0-9]".r)
+println("2-> " + "[0-9]+".r)	//Correct
+println("3-> " + "[0-9]*".r)
+
+
+class Complex(real:Double,imaginary:Double){
+  def re()=real
+  def im()=imaginary
+}
+
+
+def sad="meow"
+val catCry=sad
+println(catCry())
+
+
+val arr=Array(2,3,4)
+arr.update(1,5)
+
+
+class User(n:String){
+  val name:String=n
+}
+var u=new User(n="Frankl")
+println(u.name)
+
+
+var x,y,z=(1,2,3)
+
+
+val stream=177 #:: 199#::69#::Stream.empty
+
+
+def func(arg:String*)=arg.mkString(", ")
+func("red","green","blue")
+
+
+trait Hello{
+  def sayhello()
+}
+class A extends Hello{
+  def sayhello(){
+    println("Hello")
+  }
+}
+var a=new A()
+a.sayhello()
+
+
+val o:Option[Int]=Some(7)
+val o1:Option[Int]=None
+
+
+def factorial(n:Int):Int={
+  if(n==1) return 1
+    n*factorial(n-1)
+}
+factorial(5)
+
+
+def func1(s:String){
+  println("I love "+s)
+}
+def func2(f:String=>Unit,s:String){
+  f(s)
+}
+func2(func1, "pizza")
+
+
+for(i<-1 to 4) yield i*3
+
+
+var a=List.empty[String]
+a :+="red"
+a :+="green"
+a :+="blue"
+a ++=List("golden","bronze")
+a
+
+
+Guard in a for-comprehension:
+=============================
+val nums=List(0,1,2,3,4,5,6,7,8,9,10)
+for(num<-nums if num%3==0) yield num
+
+
+Scala Currying Function:
+========================
+def multiply(a:Int)(b:Int)=a*b
+def multiply(a:Int)=(b:Int)=>a*b
+multiply(3)(4)
+
+def multiply(a:Int)(b:Int)(c:Int)=a*b*c
+var mul=multiply(2)(3)(_)
+mul(4)
+
+var mul=multiply(2)(3)_
+mul(4)
+
+
+class Add{
+  def sum(a:Int)(b:Int)={
+    a+b
+  }
+}
+var a=new Add()
+a.sum(3)(4)
+
+
+class Concatenate{
+  def strcat(s1:String)(s2:String)=(s3:String)=>s1+s2+s3
+}
+var c=new Concatenate()
+c.strcat("Hello")("World")("How are you?")
+res7: String = HelloWorldHow are you?
+
+

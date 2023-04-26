@@ -1,0 +1,11 @@
+
+VM Details: ubuntu/Ubuntu@#876
+
+
+[8:18 AM] Anand Bhakthavatsala
+9008565965
+
+[8:18 AM] Anand Bhakthavatsala
+surendran.velath@gmail.com
+
+val myFirstRDD = sc.parallelize(List("spark", "scala", "hadoop"))

@@ -1,0 +1,10 @@
+[debug] > Exec(clean build, None, None)
+[error] Expected whitespace character
+[error] Expected '/'
+[error] clean build
+[error]       ^
+[debug] > Exec(idea-shell, None, None)
+[debug] > Exec(, None, None)
+[debug] > Exec(idea-shell, None, None)
+[debug] > Exec(, None, None)
+[debug] > Exec(idea-shell, None, None)

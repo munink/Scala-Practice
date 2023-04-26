@@ -1,0 +1,56 @@
+[
+  {
+    "ID": "1",
+    "Name": "Senpai",
+    "Gender": "1",
+    "Class": "32",
+    "Seat": "15",
+    "Club": "1",
+    "Persona": "1"
+  },
+  {
+    "ID": "2",
+    "Name": "Yui Rio",
+    "Gender": "0",
+    "Class": "11",
+    "Seat": "14",
+    "Club": "1",
+    "Persona": "5"
+  },
+  {
+    "ID": "3",
+    "Name": "Yuna Hina",
+    "Gender": "0",
+    "Class": "12",
+    "Seat": "14",
+    "Club": "1",
+    "Persona": "6"
+  },
+  {
+    "ID": "4",
+    "Name": "Koharu Hinata",
+    "Gender": "1",
+    "Class": "21",
+    "Seat": "14",
+    "Club": "1",
+    "Persona": "6"
+  },
+  {
+    "ID": "5",
+    "Name": "Mei Mio",
+    "Gender": "1",
+    "Class": "22",
+    "Seat": "14",
+    "Club": "1",
+    "Persona": "2"
+  },
+  {
+    "ID": "6",
+    "Name": "Saki Miyu",
+    "Gender": "0",
+    "Class": "31",
+    "Seat": "14",
+    "Club": "1",
+    "Persona": "6"
+  }
+]
